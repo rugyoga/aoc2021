@@ -1,5 +1,5 @@
 defmodule Day3 do
-  def finder(bits, _, _) when length(bits) == 1, do: bits |> List.first |> to_binary
+  def finder(bits, _, _) when length(bits) == 1, do: bits |> List.first |> Enum.join |> String.to_integer(2)
   def finder(bits, f, i) do
     get = &Enum.at(&1, i)
     target = bits |> Enum.map(get) |> Enum.frequencies |> f.()
@@ -8,8 +8,6 @@ defmodule Day3 do
 
   def oxygen(freqs), do: if map_size(freqs) == 1, do: Map.keys(freqs) |> List.first, else: if freqs[1] >= freqs[0], do: 1, else: 0
   def carbon(freqs), do: if map_size(freqs) == 1, do: Map.keys(freqs) |> List.first, else: if freqs[0] <= freqs[1], do: 0, else: 1
-
-  def to_binary(l), do: l |> Enum.join |> String.to_integer(2)
 end
 
 bits = "day3.txt"
