@@ -14,4 +14,4 @@ bits = "day3.txt"
 |> String.split("\n", trim: true)
 |> Enum.map(fn s -> s |> String.split("", trim: true) |> Enum.map(&String.to_integer/1) end)
 
-IO.inspect(Day3.finder(bits, &Day3.p(&1, 1, 0), 0) * Day3.finder(bits, &&Day3.p(&1, 0, 1), 0))
+IO.inspect(Day3.finder(bits, &Day3.p(&1, 1, 0), 0) * Day3.finder(bits, &Day3.p(&1, 0, 1), 0))
