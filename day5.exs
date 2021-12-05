@@ -1,7 +1,3 @@
-defmodule Day5 do
-  def update(position, counts), do: Map.update(counts, position, 1, &(&1+1))
-end
-
 "day5.txt"
  |> File.read!
  |> String.split("\n", trim: true)
@@ -14,17 +10,11 @@ end
    %{},
    fn [[x1, y1], [x2, y2]], counts ->
      if x1 == x2 do
-        step = if y1 < y2, do: 1, else: -1
-        for y <- y1..y2//step, do: [x1, y]
+       Enum.map(y1..y2, &[x1, &1])
      else
-      if y1 == y2 do
-          step = if x1 < x2, do: 1, else: -1
-          for x <- x1..x2//step, do: [x, y1]
-      else
-          []
-      end
+       if y1 == y2, do: Enum.map(x1..x2, &[&1, y1]), else: []
      end
-     |> Enum.reduce(counts, &Day5.update/2)
+     |> Enum.reduce(counts, fn position, counts -> Map.update(counts, position, 1, &(&1+1)) end)
    end
  )
  |> Enum.filter(fn {_, count} -> count >= 2 end)

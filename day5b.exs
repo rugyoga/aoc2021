@@ -14,21 +14,9 @@ end
    %{},
    fn [[x1, y1], [x2, y2]], counts ->
      if x1 == x2 do
-        step = if y1 < y2, do: 1, else: -1
-        for y <- y1..y2//step, do: [x1, y]
+       Enum.map(y1..y2, &[x1, &1])
      else
-      if y1 == y2 do
-          step = if x1 < x2, do: 1, else: -1
-          for x <- x1..x2//step, do: [x, y1]
-      else
-        step_x = if x1 < x2, do: 1, else: -1
-        step_y = if y1 < y2, do: 1, else: -1
-        Enum.zip_with(
-          (for x <- x1..x2//step_x, do: x),
-          (for y <- y1..y2//step_y, do: y),
-          fn x, y -> [x, y] end
-        )
-      end
+       if y1 == y2, do: Enum.map(x1..x2, &[&1, y1]), else: Enum.zip_with(x1..x2, y1..y2, &[&1, &2])
      end
      |> Enum.reduce(counts, &Day5.update/2)
    end
