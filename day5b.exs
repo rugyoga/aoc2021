@@ -1,7 +1,3 @@
-defmodule Day5 do
-  def update(position, counts), do: Map.update(counts, position, 1, &(&1+1))
-end
-
 "day5.txt"
  |> File.read!
  |> String.split("\n", trim: true)
@@ -18,7 +14,7 @@ end
      else
        if y1 == y2, do: Enum.map(x1..x2, &[&1, y1]), else: Enum.zip_with(x1..x2, y1..y2, &[&1, &2])
      end
-     |> Enum.reduce(counts, &Day5.update/2)
+     |> Enum.reduce(counts, fn position, counts -> Map.update(counts, position, 1, &(&1+1)) end)
    end
  )
  |> Enum.filter(fn {_, count} -> count >= 2 end)
