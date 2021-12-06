@@ -1,4 +1,4 @@
-defmodule Day6 do
+defmodule Day6b do
   def cycle(fish, 0), do: fish
   def cycle(fish, n) do
     zero_count = Map.get(fish, 0, 0)
@@ -10,15 +10,18 @@ defmodule Day6 do
     |> Map.put(8, zero_count)
     |> cycle(n-1)
   end
+
+  def run(n) do
+    "day6.txt"
+    |> File.read!
+    |> String.trim
+    |> String.split(",", trim: true)
+    |> Enum.map(&String.to_integer/1)
+    |> Enum.frequencies
+    |> cycle(n)
+    |> Map.values
+    |> Enum.sum
+  end
 end
 
-"day6.txt"
- |> File.read!
- |> String.trim
- |> String.split(",", trim: true)
- |> Enum.map(&String.to_integer/1)
- |> Enum.frequencies
- |> Day6.cycle(256)
- |> Map.values
- |> Enum.sum
- |> IO.inspect
+Day6b.run(256) |> IO.inspect
