@@ -1,12 +1,10 @@
 defmodule Day6 do
-  def cycle(fish, 0), do: fish
-  def cycle(fish, n) do
+  def cycle(fish) do
     {zero_count, fish} = Map.pop(fish, 0, 0)
     fish
     |> Enum.map(fn {n, k} -> {n-1, k} end)
-    |> Enum.into(%{8 => zero_count})
-    |> Map.update(6, zero_count, &(&1 + zero_count))
-    |> cycle(n-1)
+    |> Map.new
+    |> Map.merge(%{6 => zero_count, 8 => zero_count}, fn _, x, y -> x + y end)
   end
 
   def run(n) do
@@ -16,7 +14,8 @@ defmodule Day6 do
     |> String.split(",")
     |> Enum.map(&String.to_integer/1)
     |> Enum.frequencies
-    |> cycle(n)
+    |> Stream.iterate(&cycle/1)
+    |> Enum.at(n)
     |> Map.values
     |> Enum.sum
   end
