@@ -1,4 +1,4 @@
-f = fn n -> n * (n+1)/2 end
+f = fn n -> div(n * (n+1), 2) end
 
 "day7.txt"
  |> File.read!
