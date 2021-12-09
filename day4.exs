@@ -21,8 +21,18 @@ end
 
 [numbers | boards] = "day4.txt" |> File.read! |> String.split("\n\n", trim: true)
 numbers = numbers |> String.split(",", trim: true) |> Enum.map(&String.to_integer/1)
-boards = 
+boards =
   boards
-  |> Enum.map(fn b -> b |> String.split("\n", trim: true) |> Enum.map(fn r -> r |> String.split(" ", trim: true) |> Enum.map(&String.to_integer/1) end) end)
+  |> Enum.map(fn b ->
+     b
+     |> String.split("\n", trim: true)
+     |> Enum.map(fn r ->
+                    r
+                    |> String.split(" ", trim: true)
+                    |> Enum.map(&String.to_integer/1) end) end)
+
+# [ board]
+# [row] x 5
+# row = [integer]
 
 Day4.play(numbers, boards) |> IO.inspect
