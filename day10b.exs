@@ -1,6 +1,5 @@
 defmodule Day10 do
     @match %{"{" => "}", "[" => "]", "(" => ")", "<" => ">"}
-    @value %{ ")" => 1, "]" => 2, "}" => 3, ">" => 4}
     def find_error([], ys), do: ys
     def find_error([x | xs], [y | ys]) when x == y, do: find_error(xs, ys)
     def find_error([x | xs], ys) do
@@ -10,12 +9,9 @@ defmodule Day10 do
           nil
         end
     end
-    
-    def score([], v), do: v
-    def score([x | xs], v), do: score(xs, v*5 + @value[x])
-
-    def middle(xs), do: Enum.at(xs, div(length(xs),2))
 end
+
+value = %{ ")" => 1, "]" => 2, "}" => 3, ">" => 4}
 
 "day10.txt"
 |> File.read!
@@ -23,7 +19,7 @@ end
 |> Enum.map(&String.codepoints/1)
 |> Enum.map(&Day10.find_error(&1, []))
 |> Enum.filter(&(&1 != nil))
-|> Enum.map(&Day10.score(&1,0))
+|> Enum.map(&Enum.reduce(&1, 0, fn x, v -> v*5 + value[x] end))
 |> Enum.sort
-|> Day10.middle
+|> then(&Enum.at(&1, div(length(&1),2)))
 |> IO.inspect
