@@ -1,5 +1,5 @@
 defmodule Day9b do
-  def neighbours({{x, y} = p, v}, map) do
+  def neighbours({{x, y}, _}, map) do
     [{x+1, y}, {x-1, y}, {x, y+1}, {x, y-1}]
     |> Enum.filter(&(Map.has_key?(map, &1)))
     |> Enum.map(&{&1, map[&1]})
@@ -7,15 +7,11 @@ defmodule Day9b do
 
   def low_point?({_, value} = pv, map), do: neighbours(pv, map)|> Enum.all?(fn {_, v} -> v > value end)
 
-  def upward({p, value} = x, map) do
-    x |> neighbours(map) |> Enum.filter(fn {_, v} -> v > value end)
-  end
+  def upward({_, value} = x, map), do: x |> neighbours(map) |> Enum.filter(fn {_, v} -> v > value end)
 
-  def basin_rec(x, map) do
-    [x | upward(x, map) |> Enum.map(&basin_rec(&1, map))]
-  end
+  def basin_rec(x, map), do: [x | upward(x, map) |> Enum.map(&basin_rec(&1, map))]
 
-  def basin(x, map), do: basin_rec(x, map) |> List.flatten |> Enum.uniq()
+  def basin(x, map), do: basin_rec(x, map) |> List.flatten |> Enum.uniq
 end
 
 map =
@@ -30,9 +26,8 @@ map =
   |> Map.new
 
 
-low_points = map |> Enum.filter(&Day9b.low_point?(&1, map)) |> IO.inspect
-
-low_points
+map
+  |> Enum.filter(&Day9b.low_point?(&1, map))
   |> Enum.map(&(&1 |> Day9b.basin(map) |> length))
   |> Enum.sort()
   |> Enum.take(-3)
