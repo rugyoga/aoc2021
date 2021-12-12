@@ -1,14 +1,14 @@
 defmodule Day12b do
   def paths(x, path, graph, once, twice) do
     graph[x]
-    |> Enum.filter(&(MapSet.size(twice) == 0 or (!MapSet.member?(once, &1) && !MapSet.member?(twice, &1))))
+    |> Enum.filter(&(is_nil(twice) or (!MapSet.member?(once, &1) && twice != &1)))
     |> Enum.flat_map(
       fn "start" -> []
          "end" -> [["end" | path]]
          x ->
           if lower?(x) do
             if MapSet.member?(once, x) do
-              paths(x, [x| path], graph, once, MapSet.new([x]))
+              paths(x, [x| path], graph, once, x)
             else
               paths(x, [x| path], graph, MapSet.put(once, x), twice)
             end
