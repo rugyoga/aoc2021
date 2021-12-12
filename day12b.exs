@@ -1,15 +1,7 @@
 defmodule Day12b do
-
   def paths(x, path, graph, once, twice) do
     graph[x]
-    |> Enum.filter(
-      fn x ->
-        if MapSet.size(twice) == 0 do
-          true
-        else
-          !MapSet.member?(once, x) && !MapSet.member?(twice, x)
-        end
-      end)
+    |> Enum.filter(&(MapSet.size(twice) == 0 or (!MapSet.member?(once, &1) && !MapSet.member?(twice, &1))))
     |> Enum.flat_map(
       fn "start" -> []
          "end" -> [["end" | path]]
@@ -26,7 +18,13 @@ defmodule Day12b do
       end)
   end
 
-  def lower?(s), do: s == String.downcase(s, :ascii )
+  def lower?(s), do: s == String.downcase(s, :ascii)
+
+  def add_node([a, b], map) do
+    map
+      |> Map.update(a, MapSet.new([b]), &MapSet.put(&1, b))
+      |> Map.update(b, MapSet.new([a]), &MapSet.put(&1, a))
+  end
 end
 
 paths =
@@ -35,15 +33,6 @@ paths =
   |> String.split("\n", trim: true)
   |> Enum.map(&(String.split(&1, "-", trim: true)))
 
-graph =
-  paths
-  |> Enum.reduce(%{}, fn [a, b], map ->
+graph = paths |> Enum.reduce(%{}, &Day12b.add_node/2)
 
-  map
-   |> Map.update(a, MapSet.new([b]), &MapSet.put(&1, b))
-   |> Map.update(b, MapSet.new([a]), &MapSet.put(&1, a))
-  end)
-
-Day12b.paths("start", ["start"], graph, MapSet.new(), MapSet.new())
-|> length
-|> IO.inspect
+Day12b.paths("start", ["start"], graph, MapSet.new(), MapSet.new()) |> length |> IO.inspect
