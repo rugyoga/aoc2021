@@ -1,20 +1,26 @@
 defmodule Day9b do
-  def neighbours({x, y}, map) do
+  def neighbours({{x, y}, _}, map) do
     [{x+1, y}, {x-1, y}, {x, y+1}, {x, y-1}]
-    |> Enum.filter(&(Map.has_key?(map, &1))
+    |> Enum.filter(&Map.has_key?(map, &1))
     |> Enum.map(&{&1, map[&1]})
   end
-
-  def upward({point, value}, map) do
-    neighbours(point) |> Enum.filter(&(elem(&1, 1) > value))
+    
+  def low_point?({_, value} = pv, map) do
+    neighbours(pv, map) |> Enum.all?(fn {_, v} -> v > value end)
   end
 
-  def expand(current, basin, map) do
-    upward(current, map) |> Enum.reduce(&expand(&1, &2, map))
+  def basin_rec({_, value} = low_point, map) do
+    [low_point | 
+     neighbours(low_point, map) 
+     |> Enum.filter(fn {_, v} -> v > value end) 
+     |> Enum.map(&basin_rec(&1, map))]
   end
+
+  def basin(low_point, map), do: basin_rec(low_point, map) |> List.flatten
+
 end
 
-by_position =
+map =
   "day9.txt"
   |> File.read!
   |> String.split("\n", trim: true)
@@ -22,15 +28,17 @@ by_position =
   |> Enum.with_index
   |> Enum.map(fn {list, row} -> list |> Enum.map(fn {num, col} -> {{row, col}, num} end) end)
   |> List.flatten
-  |> Enum.reject(fn {_, v} -> v == 9 end)
+  #|> Enum.reject(fn {_, v} -> v == 9 end)
   |> Map.new
 
-low_points =
-  |> Enum.reduce(%{}, fn item, path -> basin(item, path, data) |> elem(1) end)
-  |> Enum.map(&elem(&1, 1))
-  |> Enum.frequencies()
-  |> Map.values()
-  |> Enum.sort()
-  |> Enum.take(-3)
-  |> Enum.product()
-low_points = by_position |> Enum.filter(&low_point?.(&1, by_position))
+map
+|> Enum.filter(&Day9b.low_point?(&1, map))
+|> Enum.map(fn {_, v} -> v end)
+|> Enum.sum
+# |> Enum.map(&(Day9b.basin(&1, map) |> length))
+# |> Enum.sort
+# |> Enum.reverse
+# |> Enum.take(-3)
+# |> Enum.product
+|> IO.inspect
+ 
