@@ -35,4 +35,4 @@ paths =
 
 graph = paths |> Enum.reduce(%{}, &Day12b.add_node/2)
 
-Day12b.paths("start", ["start"], graph, MapSet.new(), MapSet.new()) |> length |> IO.inspect
+Day12b.paths("start", ["start"], graph, MapSet.new(), nil) |> length |> IO.inspect
