@@ -12,7 +12,6 @@ end
   |> File.read!
   |> String.split("\n\n", trim: true)
 
-
  coords =
   coords
   |> String.split("\n", trim: true)
@@ -33,6 +32,5 @@ folds =
   {x, _} = points |> Enum.max_by(fn {x, _} -> x end)
   {_, y} = points |> Enum.max_by(fn {_, y} -> y end)
 
-  Enum.map(0..y, fn y -> Enum.map(0..x, fn x -> (if MapSet.member?(points, {x, y}), do: "X", else: " ") end) |> Enum.join("") end)
-  |> Enum.join("\n")
+  Enum.map_join(0..y, "\n", fn y -> Enum.map_join(0..x, "", fn x -> (if MapSet.member?(points, {x, y}), do: "#", else: " ") end)  end)
   |> IO.puts()
