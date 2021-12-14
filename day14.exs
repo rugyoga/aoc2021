@@ -8,20 +8,14 @@ defmodule Day14 do
   end
 end
 
-[sequence, transforms] =
-  "day14.txt"
-  |> File.read!
-  |> String.split("\n\n", trim: true)
+[sequence, transforms] = "day14.txt" |> File.read! |> String.split("\n\n", trim: true)
 
 transforms =
   transforms
   |> String.split("\n", trim: true)
   |> Enum.map(fn line -> line |> String.split(" -> ", trim: true) |> List.to_tuple end)
   |> Map.new
-  |> IO.inspect
 
 sequence = sequence |> String.codepoints|> Stream.iterate(&Day14.cycle(&1, transforms))
-
-sorted = Enum.at(sequence, 40) |> Enum.frequencies() |> Enum.sort_by(fn {_,y} -> y end)
-tenth = sorted
+sorted = Enum.at(sequence, 10) |> Enum.frequencies() |> Enum.sort_by(fn {_,y} -> y end)
 IO.puts (List.last(sorted) |> elem(1)) - (List.first(sorted) |> elem(1))
