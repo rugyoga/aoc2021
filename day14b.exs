@@ -15,10 +15,14 @@ transforms =
   |> Enum.map(fn line -> line |> String.split(" -> ", trim: true) |> List.to_tuple |> then(fn {lhs, rhs} -> {String.split(lhs, "", trim: true), rhs} end) end)
   |> Map.new
 
-sequence = sequence |> String.codepoints|> Enum.chunk_every(2, 1) |> Enum.frequencies |> Stream.iterate(&Day14.cycle(&1, transforms))
-{min, max} =
-  Enum.at(sequence, 40)
+{{_, min}, {_, max}} =
+  sequence
+  |> String.codepoints
+  |> Enum.chunk_every(2, 1)
+  |> Enum.frequencies
+  |> Stream.iterate(&Day14.cycle(&1, transforms))
+  |> Enum.at(40)
   |> Enum.reduce(%{}, fn {chars, count}, counts -> Map.update(counts, chars |> List.first, count, &(&1 + count)) end)
   |> Enum.min_max_by(fn {_, count} -> count end)
 
-IO.puts(elem(max, 1) - elem(min, 1))
+IO.puts(max-min)

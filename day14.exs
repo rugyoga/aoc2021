@@ -17,5 +17,5 @@ transforms =
   |> Map.new
 
 sequence = sequence |> String.codepoints|> Stream.iterate(&Day14.cycle(&1, transforms))
-sorted = Enum.at(sequence, 10) |> Enum.frequencies() |> Enum.sort_by(fn {_,y} -> y end)
-IO.puts (List.last(sorted) |> elem(1)) - (List.first(sorted) |> elem(1))
+{{_,min}, {_, max}} = Enum.at(sequence, 10) |> Enum.frequencies() |> Enum.min_max_by(fn {_,y} -> y end)
+IO.puts (max - min)
