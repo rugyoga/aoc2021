@@ -1,38 +1,33 @@
 defmodule Day12b do
-  def paths(x, path, graph, once, twice) do
-    graph[x]
+  def paths(graph, lower, parent, path, once, twice) do
+    graph[parent]
     |> Enum.filter(&(is_nil(twice) or (!MapSet.member?(once, &1) && twice != &1)))
     |> Enum.flat_map(
       fn "start" -> []
          "end" -> [["end" | path]]
-         x ->
-          if lower?(x) do
-            if MapSet.member?(once, x) do
-              paths(x, [x| path], graph, once, x)
+         child ->
+          if MapSet.member?(lower, child) do
+            if MapSet.member?(once, child) do
+              paths(graph, lower, child, [child | path], once, child)
             else
-              paths(x, [x| path], graph, MapSet.put(once, x), twice)
+              paths(graph, lower, child, [child | path], MapSet.put(once, child), twice)
             end
           else
-            paths(x, [x| path], graph, once, twice)
+            paths(graph, lower, child, [child | path], once, twice)
           end
       end)
   end
 
-  def lower?(s), do: s == String.downcase(s, :ascii)
+  def lower(graph), do: graph |> Map.keys |> Enum.filter(&(&1 == String.downcase(&1, :ascii))) |> MapSet.new
 
-  def add_node([a, b], map) do
-    map
-      |> Map.update(a, MapSet.new([b]), &MapSet.put(&1, b))
-      |> Map.update(b, MapSet.new([a]), &MapSet.put(&1, a))
-  end
+  def add_node([a, b], map), do: map |> Map.update(a, [b], &[b | &1]) |> Map.update(b, [a], &[a | &1])
 end
 
-paths =
-  "day12.txt"
-  |> File.read!
-  |> String.split("\n", trim: true)
-  |> Enum.map(&(String.split(&1, "-", trim: true)))
-
-graph = paths |> Enum.reduce(%{}, &Day12b.add_node/2)
-
-Day12b.paths("start", ["start"], graph, MapSet.new(), nil) |> length |> IO.inspect
+"day12.txt"
+|> File.read!
+|> String.split("\n", trim: true)
+|> Enum.map(&String.split(&1, "-", trim: true))
+|> Enum.reduce(%{}, &Day12b.add_node/2)
+|> then(&Day12b.paths(&1, Day12b.lower(&1), "start", ["start"], MapSet.new(["start"]), nil))
+|> length
+|> IO.inspect
