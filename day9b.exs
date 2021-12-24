@@ -5,9 +5,9 @@ defmodule Day9b do
     |> Enum.map(&{&1, map[&1]})
   end
 
-  def low_point?({_, value} = pv, map), do: neighbours(pv, map)|> Enum.all?(fn {_, v} -> v > value end)
+  def low_point?({_, value} = pv, map), do: pv |> neighbours(map)|> Enum.all?(fn {_, v} -> v > value end)
 
-  def upward({_, value} = x, map), do: x |> neighbours(map) |> Enum.filter(fn {_, v} -> v > value end)
+  def upward({_, value} = pv, map), do: pv |> neighbours(map) |> Enum.filter(fn {_, v} -> v > value end)
 
   def basin_rec(x, map), do: [x | upward(x, map) |> Enum.map(&basin_rec(&1, map))]
 
@@ -24,7 +24,6 @@ map =
   |> List.flatten
   |> Enum.reject(fn {_, v} -> v == 9 end)
   |> Map.new
-
 
 map
   |> Enum.filter(&Day9b.low_point?(&1, map))

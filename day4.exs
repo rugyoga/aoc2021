@@ -31,8 +31,4 @@ boards =
                     |> String.split(" ", trim: true)
                     |> Enum.map(&String.to_integer/1) end) end)
 
-# [ board]
-# [row] x 5
-# row = [integer]
-
 Day4.play(numbers, boards) |> IO.inspect

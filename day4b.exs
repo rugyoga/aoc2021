@@ -23,6 +23,11 @@ end
 numbers = numbers |> String.split(",", trim: true) |> Enum.map(&String.to_integer/1)
 boards = 
   boards
-  |> Enum.map(fn b -> b |> String.split("\n", trim: true) |> Enum.map(fn r -> r |> String.split(" ", trim: true) |> Enum.map(&String.to_integer/1) end) end)
+  |> Enum.map(fn b -> b 
+              |> String.split("\n", trim: true) 
+              |> Enum.map(fn r -> r 
+                            |> String.split(" ", trim: true) 
+                            |> Enum.map(&String.to_integer/1) end) 
+              end)
 
 Day4b.play(numbers, boards) |> IO.inspect
