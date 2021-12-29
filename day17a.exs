@@ -1,0 +1,1 @@
+Day17.hits() |> List.flatten |> Enum.max_by(fn {{_, y}, _} -> y end) |> IO.inspect
