@@ -8,8 +8,8 @@ defmodule SkewHeap do
   @spec singleton(a) :: heap(a) when a: var
   def singleton(a), do: {a, nil, nil}
 
-  @spec empty :: heap(term)
-  def empty, do: nil
+  @spec new :: heap(term)
+  def new, do: nil
 
   @spec union(heap(a), heap(a)) :: heap(a) when a: var
   def union(nil, t2), do: t2

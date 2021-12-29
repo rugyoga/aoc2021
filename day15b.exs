@@ -1,7 +1,7 @@
 defmodule Day15b do
   def neighbours({_, {x, y}}, visited, map) do
     [{x, y+1}, {x+1, y}, {x, y-1}, {x-1, y}]
-    |> Enum.filter(&(Map.has_key?(map, &1) and !Map.has_key?(visited, &1)))
+    |> Enum.filter(&(!Map.has_key?(visited, &1) and Map.has_key?(map, &1)))
     |> Enum.map(&{map[&1], &1})
   end
 
