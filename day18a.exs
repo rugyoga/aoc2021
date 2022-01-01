@@ -1,0 +1,1 @@
+Day18.data |> Enum.reduce(&Day18.addition(&2, &1)) |> Day18.magnitude |> IO.inspect
