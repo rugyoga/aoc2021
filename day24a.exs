@@ -1,0 +1,1 @@
+Day24.data |> Day24.search |> IO.inspect
