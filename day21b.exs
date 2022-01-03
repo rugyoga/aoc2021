@@ -1,0 +1,1 @@
+Day21.dirac_dice(10, 8) |> IO.inspect
