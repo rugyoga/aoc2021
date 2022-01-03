@@ -1,0 +1,1 @@
+Day22.data |> Day22.process |> Enum.filter(fn {_, v} -> v == 1 end) |> Enum.count |> IO.inspect
