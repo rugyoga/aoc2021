@@ -1,6 +1,5 @@
 Day25.data
 |> Stream.iterate(&Day25.step/1)
-|> Stream.take_while(fn {{_, dirty}, _} -> dirty end)
-|> Enum.to_list
+|> Enum.take_while(fn {{_, dirty}, _} -> dirty end)
 |> length
 |> IO.inspect
